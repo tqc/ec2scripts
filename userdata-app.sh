@@ -29,3 +29,7 @@ tar xf ${IOJS_LOCAL} -C /tmp/
 rm ${IOJS_UNTAR}/{LICENSE,CHANGELOG.md,README.md}
 rsync -a "${IOJS_UNTAR}/" /usr/local/
 
+# Start nginx
+
+service nginx start
+

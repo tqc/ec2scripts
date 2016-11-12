@@ -16,18 +16,16 @@ aws s3 cp s3://aws-codedeploy-${EC2_REGION}/latest/install . --region $EC2_REGIO
 chmod +x ./install
 ./install auto
 
+# default of 5 revisions uses too much disk space
+printf ":log_aws_wire: false\n:log_dir: '/var/log/aws/codedeploy-agent/'\n:pid_dir: '/opt/codedeploy-agent/state/.pid/'\n:program_name: codedeploy-agent\n:root_dir: '/opt/codedeploy-agent/deployment-root'\n:verbose: false\n:wait_between_runs: 1\n:proxy_uri:\n:max_revisions: 1\n" | tee /etc/codedeploy-agent/conf/codedeployagent.yml
+# Install nodejs
 
-# Install iojs
+curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
+yum install -y nodejs
 
-IOJS_VER="$(wget -q https://iojs.org/dist/index.tab -O - | head -2 | tail -1 | cut -f 1)"
-IOJS_REMOTE="http://iojs.org/dist/${IOJS_VER}/iojs-${IOJS_VER}-linux-x64.tar.gz"
-IOJS_LOCAL="/tmp/iojs-${IOJS_VER}-linux-x64.tar.gz"
-IOJS_UNTAR="/tmp/iojs-${IOJS_VER}-linux-x64"
+# Install git
 
-wget --quiet ${IOJS_REMOTE} -O ${IOJS_LOCAL}
-tar xf ${IOJS_LOCAL} -C /tmp/
-rm ${IOJS_UNTAR}/{LICENSE,CHANGELOG.md,README.md}
-rsync -a "${IOJS_UNTAR}/" /usr/local/
+yum install -y git
 
 # Start nginx
 
